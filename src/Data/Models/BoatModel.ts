@@ -1,7 +1,4 @@
-import {IMoveable} from "../../Logic/IMoveable.js";
-
-export class BoatModel {
-
+export class BoatModel  {
     private _xCoordinate: number;
     private _yCoordinate: number;
     private _speed: number;

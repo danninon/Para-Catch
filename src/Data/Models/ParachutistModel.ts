@@ -1,37 +1,29 @@
-export class ParachutistModel {
-    private _xCoordinate: number;
-    private _yCoordinate: number;
-    private _speed: number;
-    private readonly width: number; // New attribute for the width of the boat
-    private readonly height: number;
+import {Movable} from "../../Logic/IMovable";
+import { Dimensions } from "./Dimentions";
+import { Position } from "./Position";
 
-    constructor(xCoordinate: number, yCoordinate: number, speed: number) {
-        this._xCoordinate = xCoordinate;
-        this._yCoordinate = yCoordinate;
-        this._speed = speed;
-        this.width = 20;
-        this.height = 40;
-    }
+export class ParachutistModel implements Movable {
+    private readonly speed: number;
+    private position: Position;
+    private readonly dimensions: Dimensions;
 
-    get xCoordinate(): number {
-        return this._xCoordinate;
+    constructor(position: Position, speed: number){
+        this.dimensions = {xLength: 20, yLength: 40};
+        this.position = position
+        this.speed = speed;
     }
 
-    set xCoordinate(value: number) {
-        this._xCoordinate = value;
+    updatePosition(position: Position): void {
+        this.position = position;
     }
-    get yCoordinate(): number {
-        return this._yCoordinate;
+    getPosition(): Position {
+        return this.position;
+    }
+    getSpeed(): number {
+        return this.speed;
+    }
+    getDimensions(): Dimensions  {
+       return this.dimensions;
     }
 
-    set yCoordinate(value: number) {
-        this._yCoordinate = value;
-    }
-    get speed(): number {
-        return this._speed;
-    }
-
-    set speed(value: number) {
-        this._speed = value;
-    }
 }

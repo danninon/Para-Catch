@@ -1,4 +1,4 @@
-import {IMoveable} from "../../Logic/IMoveable.js";
+
 
 export class AirPlaneModel{
     private _xCoordinate: number;
@@ -8,6 +8,7 @@ export class AirPlaneModel{
 
     private readonly _width: number;
     private readonly _height: number;
+
 
     //from the above we can figure out time alive
 

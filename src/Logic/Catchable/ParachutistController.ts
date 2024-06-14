@@ -1,21 +1,29 @@
 import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
 import {ParachutistDisplay} from "./ParachutistDisplay.js";
+import {Movable} from "../IMovable";
+import { Position } from "../../Data/Models/Position.js";
+import { Dimensions } from "../../Data/Models/Dimentions.js";
 
-export class ParachutistController {
+export class ParachutistController  {
     get parachutists(): ParachutistModel[] {
         return this._parachutists;
     }
-    private _parachutists :ParachutistModel[];
+
+    private _parachutists: ParachutistModel[];
     private display: ParachutistDisplay;
 
 
-    constructor(){
+    constructor() {
         this._parachutists = []
         this.display = new ParachutistDisplay();
     }
 
     spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeed: number) {
-        const newParachutist = new ParachutistModel(planeXCoordinate, planeYCoordinate, parachutistsSpeed);
+        const newParachutist = new ParachutistModel(
+            {
+                xCoordinate: planeXCoordinate,
+                yCoordinate: planeYCoordinate
+            }, parachutistsSpeed);
         console.log("spawnParachutist", newParachutist)
         this._parachutists.push(newParachutist);
     }
@@ -24,19 +32,26 @@ export class ParachutistController {
         console.log("move: parachutists", this._parachutists);
 
         this._parachutists.forEach(parachutist => {
-            parachutist.yCoordinate += parachutist.speed;
+            parachutist.getPosition().yCoordinate += parachutist.getSpeed();
         })
 
         this._parachutists = this._parachutists.filter(parachutist => {
             console.log('waterLevelPixels', waterLevelPixels)
-            console.log('parachutist.yCoordinate', parachutist.yCoordinate);
-            return parachutist.yCoordinate <= waterLevelPixels;
+        //    console.log('parachutist.yCoordinate', parachutist.yCoordinate);
+            return parachutist.getPosition().yCoordinate <= waterLevelPixels;
         });
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
         this._parachutists.forEach(parachutist => {
-            this.display.draw(ctx, parachutist.xCoordinate, parachutist.yCoordinate, 20, 20);  // Assuming size
+
+            this.display.draw(
+                ctx,
+                parachutist.getPosition().xCoordinate,
+                parachutist.getPosition().yCoordinate,
+                20,
+                20
+            );  // Assuming size
         });
     }
 

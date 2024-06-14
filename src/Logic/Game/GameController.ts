@@ -99,10 +99,13 @@ export class GameController {
     catchChecker() {
         // Check all parachutists if they are in boat level or in water level
         this.parachutistController.parachutists.forEach((parachutist, index) => {
-            if (parachutist.yCoordinate >= (this.gameMap.height - this.gameMap.waterLevelBlockHeight) * this.gameMap.blockSize) {
-                if (parachutist.yCoordinate === this.boatController.boat.yCoordinate &&
-                    parachutist.xCoordinate >= this.boatController.boat.xCoordinate &&
-                    parachutist.xCoordinate <= (this.boatController.boat.xCoordinate + this.boatController.boat.width)) {
+            const xParachutistCoordinates:number = parachutist.getPosition().xCoordinate;
+            const yParachutistCoordinates: number = parachutist.getPosition().yCoordinate;
+
+            if (yParachutistCoordinates >= (this.gameMap.height - this.gameMap.waterLevelBlockHeight) * this.gameMap.blockSize) {
+                if (yParachutistCoordinates === this.boatController.boat.yCoordinate &&
+                    xParachutistCoordinates >= this.boatController.boat.xCoordinate &&
+                    xParachutistCoordinates <= (this.boatController.boat.xCoordinate + this.boatController.boat.width)) {
                     // Catch
                     this.player.score += this.playerCatchScore;
                     console.log(`Parachutist caught! Score is now: ${this.player.score}`);
