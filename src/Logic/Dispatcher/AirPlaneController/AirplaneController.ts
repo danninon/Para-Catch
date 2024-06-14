@@ -1,4 +1,4 @@
-import {AirPlaneModel} from "../../../Data/Models/AirPlane.js";
+import {AirPlaneModel} from "../../../Data/Models/AirPlaneModel.js";
 import {DispatcherController} from "../DispatcherController";
 
 import {DispatcherDisplay} from "./AirplaneDisplay.js";

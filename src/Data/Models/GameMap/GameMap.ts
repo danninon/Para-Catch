@@ -1,10 +1,10 @@
 import {GameBlock} from "./GameBlock.js";
 
 export class GameMap {
-    get waterLevelHeight(): number {
-        return this._waterLevelHeight;
+    get waterLevelBlockHeight(): number {
+        return this._waterLevelBlockHeight;
     }
-    private _waterLevelHeight: number;
+    private _waterLevelBlockHeight: number;
 
     get height(): number {
         return this._height;
@@ -28,7 +28,7 @@ export class GameMap {
         this._width = width;
         this._height = height;
         this._blockSize = blockSize;
-        this._waterLevelHeight = waterLevelHeight;
+        this._waterLevelBlockHeight = waterLevelHeight;
         this.blocks = [];
         this.initializeBlocks();
     }
@@ -38,7 +38,7 @@ export class GameMap {
             this.blocks[y] = [];
             for (let x = 0; x < this._width; x++) {
                 let type = 'air';
-                if (y === this._height-this.waterLevelHeight) {
+                if (y === this._height-this.waterLevelBlockHeight) {
                     type = 'sea'; // Sea level blocks
                 }
 

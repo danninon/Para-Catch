@@ -1,7 +1,7 @@
-import {Parachutist} from "../../../Data/Models/Parachutist.js";
+import {ParachutistModel} from "../../../Data/Models/ParachutistModel.js";
 
 export class DispatcherDisplay{
-    public notifyForAirplaneExit(parachutist : Parachutist):void {
+    public notifyForAirplaneExit(parachutist : ParachutistModel):void {
 
     }
 }

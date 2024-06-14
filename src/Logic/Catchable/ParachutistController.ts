@@ -1,7 +1,7 @@
-import {Parachutist} from "../../Data/Models/Parachutist.js";
+import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
 
 export class ParachutistController {
-    private parachutists :Parachutist[];
+    private parachutists :ParachutistModel[];
 
 
     constructor(){
@@ -9,7 +9,7 @@ export class ParachutistController {
     }
 
     spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeed: number) {
-        const newParachutist = new Parachutist(planeXCoordinate, planeYCoordinate, parachutistsSpeed);
+        const newParachutist = new ParachutistModel(planeXCoordinate, planeYCoordinate, parachutistsSpeed);
         console.log("spawnParachutist", newParachutist)
         this.parachutists.push(newParachutist);
     }

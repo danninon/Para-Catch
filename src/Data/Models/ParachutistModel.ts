@@ -1,4 +1,4 @@
-export class Parachutist {
+export class ParachutistModel {
     private _xCoordinate: number;
     private _yCoordinate: number;
     private _speed: number;
