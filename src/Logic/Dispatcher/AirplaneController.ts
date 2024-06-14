@@ -48,8 +48,14 @@ export class AirplaneController {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         if (this._airplane && this._airPlaneExists) {
-            const { xCoordinate, yCoordinate, width, height } = this._airplane; // Assume these properties exist
-            this.display.draw(ctx, xCoordinate, yCoordinate, width, height);
+            // const { xCoordinate, yCoordinate, width, height } = this._airplane; // Assume these properties exist
+            this.display.draw(
+                ctx,
+                this._airplane.getPosition().xCoordinate,
+                this._airplane.getPosition().yCoordinate,
+                this._airplane.getDimensions().xLength,
+                this._airplane.getDimensions().yLength,
+            );
         }
     }
 
@@ -75,7 +81,9 @@ export class AirplaneController {
         if (!this.lastDispatchedParachutist || now.getTime() - this.lastDispatchedParachutist.getTime() > 1000) {
             if (this._airplane) {
                 this.lastDispatchedParachutist = now; // Update the last dispatched time
-                this.dispatchParachutist(this._airplane.xCoordinate, this._airplane.yCoordinate);
+                this.dispatchParachutist(
+                    this._airplane.getPosition().xCoordinate,
+                    this._airplane.getPosition().yCoordinate);
 
             }
         }
