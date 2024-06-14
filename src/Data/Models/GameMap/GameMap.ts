@@ -4,14 +4,17 @@ export class GameMap {
     get waterLevelBlockHeight(): number {
         return this._waterLevelBlockHeight;
     }
+
     private _waterLevelBlockHeight: number;
 
     get height(): number {
         return this._height;
     }
+
     get blockSize(): number {
         return this._blockSize;
     }
+
     get width(): number {
         return this._width;
     }
@@ -19,6 +22,9 @@ export class GameMap {
     set width(value: number) {
         this._width = value;
     }
+
+    private seaImage: HTMLImageElement;
+    private backgroundImage: HTMLImageElement;
     private _width: number;
     private _height: number;
     private blocks: GameBlock[][];
@@ -31,6 +37,11 @@ export class GameMap {
         this._waterLevelBlockHeight = waterLevelHeight;
         this.blocks = [];
         this.initializeBlocks();
+
+        this.seaImage = new Image();
+        this.backgroundImage = new Image();
+        this.seaImage.src = '../../../../static/resources/sea.png';  // Set the path to your sea image
+        this.backgroundImage.src = '../../../../static/resources/background.png';  // Set the path to your background image
     }
 
     private initializeBlocks(): void {
@@ -38,7 +49,7 @@ export class GameMap {
             this.blocks[y] = [];
             for (let x = 0; x < this._width; x++) {
                 let type = 'air';
-                if (y === this._height-this.waterLevelBlockHeight) {
+                if (y === this._height - this.waterLevelBlockHeight) {
                     type = 'sea'; // Sea level blocks
                 }
 
@@ -56,10 +67,13 @@ export class GameMap {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        for (let y = 0; y < this._height; y++) {
-            for (let x = 0; x < this._width; x++) {
-                this.blocks[y][x].draw(ctx, x * this._blockSize, y * this._blockSize, this._blockSize);
-            }
+        // Draw the full background image
+        if (this.backgroundImage.complete) {
+            ctx.drawImage(this.backgroundImage, 0, 0, this._width * this._blockSize, this._height * this._blockSize);
+        }
+        if (this.seaImage.complete) {
+            const seaLevelY = (this._height - this._waterLevelBlockHeight) * this._blockSize;
+            ctx.drawImage(this.seaImage, 0, seaLevelY, this._width * this._blockSize, this._blockSize * this._waterLevelBlockHeight);
         }
     }
 }
