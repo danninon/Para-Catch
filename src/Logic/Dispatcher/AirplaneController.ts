@@ -1,7 +1,5 @@
-import {AirPlaneModel} from "../../../Data/Models/AirPlaneModel.js";
-import {DispatcherController} from "../DispatcherController";
-
-import {DispatcherDisplay} from "./AirplaneDisplay.js";
+import {AirPlaneModel} from "../../Data/Models/AirPlaneModel.js";
+import {AirplaneDisplay} from "./AirplaneDisplay.js";
 
 
 type EventListener = (x: number, y: number) => void;
@@ -16,7 +14,8 @@ export class AirplaneController {
         this._airPlaneExists = value;
     }
     private _airplane: AirPlaneModel | null = null;
-    private display: DispatcherDisplay | null = null;
+    private display: AirplaneDisplay;
+
     private _airPlaneExists: boolean;
     private lastDispatchedParachutist: Date | null = null;
     private eventDispatchedListeners: EventListener[]
@@ -41,8 +40,16 @@ export class AirplaneController {
     constructor() {
         this._airPlaneExists = false;
         this.eventDispatchedListeners = [];
+        this.display = new AirplaneDisplay();
         // this.airplaneDispatcher = new AirplaneDispatcher(500); //todo, how does it get map-width?
         // this.parachutistsDispatcher = new ParachutistsDispatcher(); // Start dispatching automatically
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        if (this._airplane && this._airPlaneExists) {
+            const { xCoordinate, yCoordinate, width, height } = this._airplane; // Assume these properties exist
+            this.display.draw(ctx, xCoordinate, yCoordinate, width, height);
+        }
     }
 
     public start(): void {
@@ -121,11 +128,11 @@ export class AirplaneController {
     }
     // Get the current airplane
 
-    public draw(ctx: CanvasRenderingContext2D): void {
-        if (this._airplane) {
-            this._airplane.draw(ctx);
-        }
-    }
+    // public draw(ctx: CanvasRenderingContext2D): void {
+    //     if (this._airplane) {
+    //         this._airplane.draw(ctx);
+    //     }
+    // }
     // Optional: Clear the current airplane
     // private clearAirplane(): void {
     //     this.airplane = null;

@@ -1,5 +1,4 @@
-import {ParachutistModel} from "../../Data/Models/ParachutistModel";
-import {AirplaneController} from "../Dispatcher/AirPlaneController/AirplaneController.js";
+import {AirplaneController} from "../Dispatcher/AirplaneController.js";
 import {GameMap} from "../../Data/Models/GameMap/GameMap.js";
 import {ParachutistController} from "../Catchable/ParachutistController.js";
 import {BoatController, EDirection} from "../Catcher/BoatController.js";

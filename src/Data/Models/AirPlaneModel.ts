@@ -4,10 +4,10 @@ export class AirPlaneModel{
     private _xCoordinate: number;
     private _yCoordinate: number;
     private _speed: number;
-    private readonly planeImage: HTMLImageElement;
+  //  private readonly planeImage: HTMLImageElement;
 
-    private readonly width: number;
-    private readonly height: number;
+    private readonly _width: number;
+    private readonly _height: number;
 
     //from the above we can figure out time alive
 
@@ -16,11 +16,20 @@ export class AirPlaneModel{
         this._yCoordinate = y;
         this._speed = speed;
 
-        this.width = 100;
-        this.height = 50;
-        this.planeImage = new Image();
-        this.planeImage.src = '../../../static/resources/plane.png';
+        this._width = 100;
+        this._height = 50;
+  //      this.planeImage = new Image();
+   //     this.planeImage.src = '../../../static/resources/plane.png';
     }
+
+    get width(){
+        return this._width
+    }
+
+    get height(){
+        return this._height
+    }
+
 
     get xCoordinate() {
         return this._xCoordinate;
@@ -52,11 +61,11 @@ export class AirPlaneModel{
         }
     }
 
-    public draw(ctx: CanvasRenderingContext2D): void {
-        // Assuming the airplane is represented as a simple rectangle
-        //  ctx.fillStyle = 'green';
-        ctx.drawImage(this.planeImage, this.xCoordinate, this.yCoordinate, this.width, this.height); // Draw a rectangle as the airplane
-    }
+    // public draw(ctx: CanvasRenderingContext2D): void {
+    //     // Assuming the airplane is represented as a simple rectangle
+    //     //  ctx.fillStyle = 'green';
+    //     ctx.drawImage(this.planeImage, this.xCoordinate, this.yCoordinate, this.width, this.height); // Draw a rectangle as the airplane
+    // }
 
     // public draw(ctx: CanvasRenderingContext2D): void {
     //     // Assuming the airplane is represented as a simple rectangle
