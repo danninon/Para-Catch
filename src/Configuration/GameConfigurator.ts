@@ -1,0 +1,5 @@
+class GameConfigurator {
+
+}
+
+export { GameConfigurator }
