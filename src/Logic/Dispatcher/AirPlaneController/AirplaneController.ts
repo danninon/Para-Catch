@@ -100,11 +100,11 @@ export class AirplaneController {
     // }
 
     // Create or update the single airplane
-    public move(maxWidthPixels: number): void {
+    public move(): void {
         if (this.airPlaneExists && this._airplane) {
-            this._airplane.xCoordinate += this._airplane.speed;
+            this._airplane.xCoordinate -= this._airplane.speed;
             // Check if the airplane has moved past the last tile
-            if (this._airplane.xCoordinate > maxWidthPixels) {
+            if (this._airplane.xCoordinate < 0) {
                 this.removeAirPlane();
             }
         }

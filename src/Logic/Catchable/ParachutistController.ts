@@ -1,27 +1,30 @@
 import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
 
 export class ParachutistController {
-    private parachutists :ParachutistModel[];
+    get parachutists(): ParachutistModel[] {
+        return this._parachutists;
+    }
+    private _parachutists :ParachutistModel[];
 
 
     constructor(){
-        this.parachutists = []
+        this._parachutists = []
     }
 
     spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeed: number) {
         const newParachutist = new ParachutistModel(planeXCoordinate, planeYCoordinate, parachutistsSpeed);
         console.log("spawnParachutist", newParachutist)
-        this.parachutists.push(newParachutist);
+        this._parachutists.push(newParachutist);
     }
 
     public move(waterLevelPixels: number): void {
-        console.log("move: parachutists", this.parachutists);
+        console.log("move: parachutists", this._parachutists);
 
-        this.parachutists.forEach(parachutist => {
+        this._parachutists.forEach(parachutist => {
             parachutist.yCoordinate += parachutist.speed;
         })
 
-        this.parachutists = this.parachutists.filter(parachutist => {
+        this._parachutists = this._parachutists.filter(parachutist => {
             console.log('waterLevelPixels', waterLevelPixels)
             console.log('parachutist.yCoordinate', parachutist.yCoordinate);
             return parachutist.yCoordinate <= waterLevelPixels;
@@ -29,8 +32,8 @@ export class ParachutistController {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        console.log("draw: parachutists", this.parachutists);
-        this.parachutists.forEach(parachutist => {
+        console.log("draw: parachutists", this._parachutists);
+        this._parachutists.forEach(parachutist => {
             parachutist.draw(ctx);
         })
     }
