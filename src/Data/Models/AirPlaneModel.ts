@@ -18,8 +18,6 @@ export class AirPlaneModel{
 
         this._width = 100;
         this._height = 50;
-  //      this.planeImage = new Image();
-   //     this.planeImage.src = '../../../static/resources/plane.png';
     }
 
     get width(){
@@ -61,15 +59,4 @@ export class AirPlaneModel{
         }
     }
 
-    // public draw(ctx: CanvasRenderingContext2D): void {
-    //     // Assuming the airplane is represented as a simple rectangle
-    //     //  ctx.fillStyle = 'green';
-    //     ctx.drawImage(this.planeImage, this.xCoordinate, this.yCoordinate, this.width, this.height); // Draw a rectangle as the airplane
-    // }
-
-    // public draw(ctx: CanvasRenderingContext2D): void {
-    //     // Assuming the airplane is represented as a simple rectangle
-    //     ctx.fillStyle = 'red';
-    //     ctx.fillRect(this.xCoordinate, this.yCoordinate, 50, 20); // Draw a rectangle as the airplane
-    // }
 }

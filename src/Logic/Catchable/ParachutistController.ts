@@ -1,14 +1,17 @@
 import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
+import {ParachutistDisplay} from "./ParachutistDisplay.js";
 
 export class ParachutistController {
     get parachutists(): ParachutistModel[] {
         return this._parachutists;
     }
     private _parachutists :ParachutistModel[];
+    private display: ParachutistDisplay;
 
 
     constructor(){
         this._parachutists = []
+        this.display = new ParachutistDisplay();
     }
 
     spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeed: number) {
@@ -32,10 +35,9 @@ export class ParachutistController {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        console.log("draw: parachutists", this._parachutists);
         this._parachutists.forEach(parachutist => {
-            parachutist.draw(ctx);
-        })
+            this.display.draw(ctx, parachutist.xCoordinate, parachutist.yCoordinate, 20, 20);  // Assuming size
+        });
     }
 
 }

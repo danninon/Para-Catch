@@ -6,7 +6,6 @@ export class BoatModel {
     private _yCoordinate: number;
     private _speed: number;
     private readonly _width: number; // New attribute for the width of the boat
-  //  private readonly boatImage: HTMLImageElement;
     private readonly _height: number;
 
     //from the above we can figure out time alive
@@ -16,9 +15,6 @@ export class BoatModel {
         this._speed = speed;
         this._width = width;
         this._height = 50;
-   //     this.boatImage = new Image();
- //       this.boatImage.src = '../../../static/resources/boat.png';
-
     }
 
     get height(): number{
@@ -59,9 +55,4 @@ export class BoatModel {
         }
     }
 
-    // public draw(ctx: CanvasRenderingContext2D): void {
-    //     // Assuming the airplane is represented as a simple rectangle
-    //   //  ctx.fillStyle = 'green';
-    //     ctx.drawImage(this.boatImage, this.xCoordinate, this.yCoordinate, this.width, this.height); // Draw a rectangle as the airplane
-    // }
 }

@@ -3,7 +3,6 @@ export class ParachutistModel {
     private _yCoordinate: number;
     private _speed: number;
     private readonly width: number; // New attribute for the width of the boat
-    private readonly parachutistImage: HTMLImageElement;
     private readonly height: number;
 
     constructor(xCoordinate: number, yCoordinate: number, speed: number) {
@@ -12,8 +11,6 @@ export class ParachutistModel {
         this._speed = speed;
         this.width = 20;
         this.height = 40;
-        this.parachutistImage = new Image();
-        this.parachutistImage.src = '../../../static/resources/parachutist.png';
     }
 
     get xCoordinate(): number {
@@ -36,11 +33,5 @@ export class ParachutistModel {
 
     set speed(value: number) {
         this._speed = value;
-    }
-
-    public draw(ctx: CanvasRenderingContext2D): void {
-        // Assuming the airplane is represented as a simple rectangle
-        //  ctx.fillStyle = 'green';
-        ctx.drawImage(this.parachutistImage, this.xCoordinate, this.yCoordinate, this.width, this.height); // Draw a rectangle as the airplane
     }
 }
