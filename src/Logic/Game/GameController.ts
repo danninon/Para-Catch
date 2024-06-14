@@ -55,7 +55,12 @@ export class GameController {
 
             if (!this.airPlaneController.airPlaneExists){
                 const planeSpeed: number = this.planeSpeed * this.gameMap.blockSize;
-                this.airPlaneController.createAndLaunchAirPlane(this.gameMap.width*this.gameMap.blockSize,0,planeSpeed);
+                this.airPlaneController.createAndLaunchAirPlane(
+                    {
+                        xCoordinate: this.gameMap.width*this.gameMap.blockSize,
+                        yCoordinate: 0
+                    },
+                    planeSpeed);
             }
 
             this.airPlaneController.move();
@@ -101,11 +106,13 @@ export class GameController {
         this.parachutistController.parachutists.forEach((parachutist, index) => {
             const xParachutistCoordinates:number = parachutist.getPosition().xCoordinate;
             const yParachutistCoordinates: number = parachutist.getPosition().yCoordinate;
+            const xBoatCoordinates: number = this.boatController.boat.getPosition().xCoordinate;
+            const yBoatCoordinates: number = this.boatController.boat.getPosition().yCoordinate
 
             if (yParachutistCoordinates >= (this.gameMap.height - this.gameMap.waterLevelBlockHeight) * this.gameMap.blockSize) {
-                if (yParachutistCoordinates === this.boatController.boat.yCoordinate &&
-                    xParachutistCoordinates >= this.boatController.boat.xCoordinate &&
-                    xParachutistCoordinates <= (this.boatController.boat.xCoordinate + this.boatController.boat.width)) {
+                if (yParachutistCoordinates === yBoatCoordinates &&
+                    xParachutistCoordinates >= xBoatCoordinates &&
+                    xParachutistCoordinates <= (xBoatCoordinates + this.boatController.boat.getDimensions().xLength)) {
                     // Catch
                     this.player.score += this.playerCatchScore;
                     console.log(`Parachutist caught! Score is now: ${this.player.score}`);
@@ -114,7 +121,7 @@ export class GameController {
                     this.player.lives--;
                     console.log(`Parachutist missed. Lives remaining: ${this.player.lives}`);
                     if (this.player.lives <= 0) {
-                        this.gameRunning = false
+                        this.gameRunning = false;
                     }
                 }
                 // Remove parachutist from the array as it's either caught or missed

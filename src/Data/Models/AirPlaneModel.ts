@@ -1,51 +1,70 @@
+import {Position} from "./Utils/Position.js";
+import {Dimensions} from "./Utils/Dimentions.js";
+import {Movable, MovementStrategy} from "../../Logic/IMovable.js";
 
 
-export class AirPlaneModel{
-    private _xCoordinate: number;
-    private _yCoordinate: number;
+export class AirPlaneModel implements Movable{
+
+
+    // private _xCoordinate: number;
+    // private _yCoordinate: number;
     private _speed: number;
   //  private readonly planeImage: HTMLImageElement;
 
-    private readonly _width: number;
-    private readonly _height: number;
-
+    // private readonly _width: number;
+    // private readonly _height: number;
+    // private readonly speed: number;
+    private position: Position;
+    private readonly dimensions: Dimensions;
 
     //from the above we can figure out time alive
 
-    constructor(x: number, y: number, speed: number) {
-        this._xCoordinate = x;
-        this._yCoordinate = y;
+    constructor(position: Position, speed: number){
+        this.dimensions = {xLength: 100, yLength: 50};
+        this.position = position
         this._speed = speed;
+        // this._speed = speed;
 
-        this._width = 100;
-        this._height = 50;
+    }
+
+    updatePosition(position: Position): void {
+        this.position = position;
+    }
+    getPosition(): Position {
+        return this.position;
+    }
+    getSpeed(): number {
+        return this.speed;
+    }
+    getDimensions(): Dimensions  {
+        return this.dimensions;
     }
 
     get width(){
-        return this._width
+        return this.dimensions.xLength;
     }
 
     get height(){
-        return this._height
+        return this.dimensions.yLength
     }
 
 
     get xCoordinate() {
-        return this._xCoordinate;
+        return this.position.xCoordinate;
     }
 
     //cannot be negative
     set xCoordinate(value: number) {
-        this._xCoordinate = value;
+        this.position.xCoordinate = value;
     }
 
     get yCoordinate() {
-        return this._yCoordinate;
+        return this.position.yCoordinate;
     }
 
     //cannot be negative
     set yCoordinate(value: number) {
-        this._yCoordinate = value;
+        this.position.yCoordinate = value;
     }
 
     get speed() {

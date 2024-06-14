@@ -1,5 +1,6 @@
 import {AirPlaneModel} from "../../Data/Models/AirPlaneModel.js";
 import {AirplaneDisplay} from "./AirplaneDisplay.js";
+import {Position} from "../../Data/Models/Utils/Position";
 
 
 type EventListener = (x: number, y: number) => void;
@@ -92,33 +93,21 @@ export class AirplaneController {
         console.log(`Dispatched parachutist at (${xCoordinate}, ${yCoordinate})`);
     }
 
-    // private StartDispatchingParachutists(): void{
-    //     this.parachutistsDispatcher.start()
-    // }
 
-
-    //move to display
-    // public DispatchCatchable(): void {
-    //   this.parachutistsDispatcher.dispatchParachutist();
-    // }
-
-    // public StartDispatcher(x: number, y: number, speed: number) {
-    //     this.setAirplaneModel(x,y,speed)
-    // }
-
-    // Create or update the single airplane
     public move(): void {
         if (this.airPlaneExists && this._airplane) {
-            this._airplane.xCoordinate -= this._airplane.speed;
+        const airPlanePosition:Position = this._airplane.getPosition();
+
+            airPlanePosition.xCoordinate -= this._airplane.getSpeed();
             // Check if the airplane has moved past the last tile
-            if (this._airplane.xCoordinate < 0) {
+            if (airPlanePosition.xCoordinate < 0) {
                 this.removeAirPlane();
             }
         }
     }
 
-    public createAndLaunchAirPlane(x: number, y: number, speed: number){
-        this._airplane = new AirPlaneModel(x,y,speed);
+    public createAndLaunchAirPlane(position: Position, speed: number){
+        this._airplane = new AirPlaneModel(position,speed);
         this._airPlaneExists = true;
         this.start();
     }
@@ -126,28 +115,5 @@ export class AirplaneController {
     private removeAirPlane(){
         this.airPlaneExists = false;
     }
-    // Get the current airplane
-
-    // public draw(ctx: CanvasRenderingContext2D): void {
-    //     if (this._airplane) {
-    //         this._airplane.draw(ctx);
-    //     }
-    // }
-    // Optional: Clear the current airplane
-    // private clearAirplane(): void {
-    //     this.airplane = null;
-    // }
-
-
-
-    // Update the position of the airplane
-    // public updateAirplaneLocation(deltaTime: number): void {
-    //     if (this.airplane) {
-    //         this.airplane.move(deltaTime);
-    //         console.log(`Airplane at (${this.airplane.xCoordinate}, ${this.airplane.yCoordinate}) with speed ${this.airplane.speed}`);
-    //     } else {
-    //         console.log("No airplane is set.");
-    //     }
-    // }
 
 }

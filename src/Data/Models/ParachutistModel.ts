@@ -1,6 +1,6 @@
-import {Movable} from "../../Logic/IMovable";
-import { Dimensions } from "./Dimentions";
-import { Position } from "./Position";
+import {Movable} from "../../Logic/IMovable.js";
+import { Dimensions } from "./Utils/Dimentions.js";
+import { Position } from "./Utils/Position.js";
 
 export class ParachutistModel implements Movable {
     private readonly speed: number;

@@ -1,5 +1,5 @@
-import {Position} from "../Data/Models/Position.js";
-import {Dimensions} from "../Data/Models/Dimentions";
+import {Position} from "../Data/Models/Utils/Position";
+import {Dimensions} from "../Data/Models/Utils/Dimentions";
 
 export interface Movable {
   updatePosition( position: Position ): void;

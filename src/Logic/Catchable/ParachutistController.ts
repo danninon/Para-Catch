@@ -1,8 +1,6 @@
 import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
 import {ParachutistDisplay} from "./ParachutistDisplay.js";
-import {Movable} from "../IMovable";
-import { Position } from "../../Data/Models/Position.js";
-import { Dimensions } from "../../Data/Models/Dimentions.js";
+
 
 export class ParachutistController  {
     get parachutists(): ParachutistModel[] {
