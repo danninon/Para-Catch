@@ -13,10 +13,8 @@ export class AirplaneController implements IGameDrawer {
 
     private _airplane: AirPlaneModel | null = null;
     private display: IDisplayTwoDimensions;
-    private lastDispatchedParachutist: Date | null = null;
     private scheduler: ParachutistScheduler;
     private eventDispatchedListeners: EventListener[]
-    private lastDispatchedAirplane: Date | null = null;
 
     constructor() {
         this._airPlaneExists = false;
