@@ -1,11 +1,14 @@
 import {AirPlaneModel} from "../../Data/Models/AirPlaneModel.js";
 import {AirplaneDisplay} from "./AirplaneDisplay.js";
-import {Position} from "../../Data/Models/Utils/Position";
+import {ParachutistScheduler} from "./ParachutistScheduler.js";
+import {Position} from "../../Data/Models/Utils/Position.js";
+import {IDisplayTwoDimensions} from "../IDisplayTwoDimensions.js";
+import {IGameDrawer} from "../IGameDrawer";
 
 
 type EventListener = (x: number, y: number) => void;
 
-export class AirplaneController {
+export class AirplaneController implements IGameDrawer {
 
     get airPlaneExists(): boolean {
         return this._airPlaneExists;
@@ -15,10 +18,12 @@ export class AirplaneController {
         this._airPlaneExists = value;
     }
     private _airplane: AirPlaneModel | null = null;
-    private display: AirplaneDisplay;
+    private display: IDisplayTwoDimensions;
 
     private _airPlaneExists: boolean;
     private lastDispatchedParachutist: Date | null = null;
+
+    private scheduler: ParachutistScheduler;
     private eventDispatchedListeners: EventListener[]
 
     private lastDispatchedAirplane: Date | null = null;
@@ -42,8 +47,15 @@ export class AirplaneController {
         this._airPlaneExists = false;
         this.eventDispatchedListeners = [];
         this.display = new AirplaneDisplay();
-        // this.airplaneDispatcher = new AirplaneDispatcher(500); //todo, how does it get map-width?
-        // this.parachutistsDispatcher = new ParachutistsDispatcher(); // Start dispatching automatically
+
+        this.scheduler = new ParachutistScheduler(1000, 5000,() => {
+            if (this._airplane) {
+                this.dispatchParachutist(
+                    this._airplane.getPosition().xCoordinate,
+                    this._airplane.getPosition().yCoordinate
+                );
+            }
+        });
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
@@ -61,13 +73,10 @@ export class AirplaneController {
 
     public start(): void {
         console.log('at start of airplanecontroller');
-        setInterval(this.parachutistSpawnTimer.bind(this), 1000); //dropping parachutists
+        this.scheduler.start();
+        // setInterval(this.parachutistSpawnTimer.bind(this), 1000); //dropping parachutists
 
-        //flying new planes
-        //moving
     }
-
-    //if there is no airplane create airplane
 
     public stop(): void {
 
@@ -110,12 +119,16 @@ export class AirplaneController {
         }
     }
 
-    public createAndLaunchAirPlane(positionByCoordinates: Position, speedByCoordinates: number){
-        this._airplane = new AirPlaneModel(positionByCoordinates,speedByCoordinates);
-        this._airPlaneExists = true;
-        this.start();
+    // todo: start / stop
+    public createAndLaunchAirPlaneIfAirplaneDoesntExist(positionByCoordinates: Position, speedByCoordinates: number){
+        if (!this.airPlaneExists) {
+            this._airplane = new AirPlaneModel(positionByCoordinates, speedByCoordinates);
+            this._airPlaneExists = true;
+            this.scheduler.start();
+        }
     }
 
+    // todo: start / stop
     private removeAirPlane(){
         this.airPlaneExists = false;
     }

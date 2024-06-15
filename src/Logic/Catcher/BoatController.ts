@@ -1,15 +1,17 @@
 import {BoatModel} from "../../Data/Models/BoatModel.js";
 import {DisplayBoat} from "./BoatDisplay.js";
-import {Position} from "../../Data/Models/Utils/Position";
+import {Position} from "../../Data/Models/Utils/Position.js";
+import {IDisplayTwoDimensions} from "../IDisplayTwoDimensions.js";
+import {IGameDrawer} from "../IGameDrawer";
 
 export enum EDirection {LEFT,RIGHT,STAY}
 
-export class BoatController {
+export class BoatController implements IGameDrawer{
     get boat(): BoatModel {
         return this._boat;
     }
    private readonly _boat: BoatModel;
-   private display: DisplayBoat;
+   private display: IDisplayTwoDimensions;
 
    //todo: get Position instead of making it here
    constructor(positionByCoordinates:Position, speedByCoordinates: number, boatXLength: number){

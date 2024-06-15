@@ -1,4 +1,6 @@
-export class AirplaneDisplay {
+import {IDisplayTwoDimensions} from "../IDisplayTwoDimensions";
+
+export class AirplaneDisplay implements IDisplayTwoDimensions{
     private readonly image: HTMLImageElement;
 
     constructor() {

@@ -1,5 +1,7 @@
 // ParachutistDisplay.ts
-export class ParachutistDisplay {
+import {IDisplayTwoDimensions} from "../IDisplayTwoDimensions.js";
+
+export class ParachutistDisplay implements IDisplayTwoDimensions {
     private readonly image: HTMLImageElement;
 
     constructor() {

@@ -1,14 +1,16 @@
 import {ParachutistModel} from "../../Data/Models/ParachutistModel.js";
 import {ParachutistDisplay} from "./ParachutistDisplay.js";
+import {IDisplayTwoDimensions} from "../IDisplayTwoDimensions.js";
+import {IGameDrawer} from "../IGameDrawer";
 
 
-export class ParachutistController  {
+export class ParachutistController implements IGameDrawer {
     get parachutists(): ParachutistModel[] {
         return this._parachutists;
     }
 
     private _parachutists: ParachutistModel[];
-    private display: ParachutistDisplay;
+    private display: IDisplayTwoDimensions;
 
 
     constructor() {
