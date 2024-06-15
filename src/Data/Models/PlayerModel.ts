@@ -1,11 +1,18 @@
+import {
+    playerTextBoxFillColor,
+    playerTextBoxFont,
+    playerTextBoxYLength,
+    playTextBoxPadding
+} from "../../Configuration/GameConfigurations.js";
+
 export class PlayerModel {
-    get lives(): number {
-        return this._lives;
+    constructor(score: number, lives: number) {
+        this._lives = lives;
+        this._score = score;
     }
 
-    set lives(value: number) {
-        this._lives = value;
-    }
+    private _score: number = 0;
+
     get score(): number {
         return this._score;
     }
@@ -13,26 +20,24 @@ export class PlayerModel {
     set score(value: number) {
         this._score = value;
     }
-    // Existing properties...
 
-    private _score: number = 0;
-    private _lives: number = 3;
+    private _lives: number = 0;
 
-   constructor(score: number, lives: number) {
-       this.lives = lives;
-       this.score = score;
-   }
+    get lives(): number {
+        return this._lives;
+    }
+
+    set lives(value: number) {
+        this._lives = value;
+    }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        const padding = 10;
-        const scoreText = `Score: ${this.score}`;
-        const livesText = `Lives: ${this.lives}`;
-
-        ctx.fillStyle = 'black';  // Choose a text color that fits your game's theme
-        ctx.font = '16px Arial';  // Set the font size and family
-
-        // Calculate positions to ensure the text is visible, adjust as necessary
-        ctx.fillText(scoreText, padding, 20);
-        ctx.fillText(livesText, ctx.canvas.width - ctx.measureText(livesText).width - padding, 20);
+        const padding = playTextBoxPadding;
+        const scoreText = `Score: ${this._score}`;
+        const livesText = `Lives: ${this._lives}`;
+        ctx.fillStyle = playerTextBoxFillColor;  // Choose a text color that fits your game's theme
+        ctx.font = playerTextBoxFont;  // Set the font size and family
+        ctx.fillText(scoreText, padding, playerTextBoxYLength);
+        ctx.fillText(livesText, ctx.canvas.width - ctx.measureText(livesText).width - padding, playerTextBoxYLength);
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Airplane Game</title>
     <style>
         body {
@@ -12,13 +12,14 @@
             height: 100vh;
             margin: 0;
         }
+
         canvas {
             border: 1px solid #000;
         }
     </style>
 </head>
 <body>
-<canvas id="gameCanvas" width="500" height="500"></canvas>
-<script type="module" src="dist/src/main.js"></script> <!-- Adjust the path to your compiled JS -->
+<canvas height="500" id="gameCanvas" width="500"></canvas>
+<script src="dist/src/main.js" type="module"></script> <!-- Adjust the path to your compiled JS -->
 </body>
 </html>

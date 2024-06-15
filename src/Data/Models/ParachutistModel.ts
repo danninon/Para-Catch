@@ -1,11 +1,11 @@
 import {Position} from "./Utils/Position.js";
 import {MovableModel} from "./MovableModel.js";
-import {ParachutistDimensions} from "../../Configuration/GameConfigurator.js";
+import {ParachutistDimensions} from "../../Configuration/GameConfigurations.js";
 
 
-export class ParachutistModel extends MovableModel{
+export class ParachutistModel extends MovableModel {
 
-    constructor(position: Position, speed: number){
+    constructor(position: Position, speed: number) {
         super(position, ParachutistDimensions, speed)
     }
 }

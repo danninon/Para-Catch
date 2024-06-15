@@ -1,10 +1,10 @@
 import {Position} from "./Utils/Position.js";
 import {MovableModel} from "./MovableModel.js";
-import {BoatYLength} from "../../Configuration/GameConfigurator.js";
+import {BoatYLength} from "../../Configuration/GameConfigurations.js";
 
 
-export class BoatModel extends MovableModel{
-    constructor(position: Position, speed: number, xLength: number){
-        super(position, {xLength: xLength,yLength: BoatYLength }, speed)
+export class BoatModel extends MovableModel {
+    constructor(position: Position, speed: number, xLength: number) {
+        super(position, {xLength: xLength, yLength: BoatYLength}, speed)
     }
 }

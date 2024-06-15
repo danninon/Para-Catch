@@ -3,36 +3,39 @@ import {GameMap} from "../../Data/Models/GameMap/GameMap.js";
 import {ParachutistController} from "../Catchable/ParachutistController.js";
 import {BoatController, EDirection} from "../Catcher/BoatController.js";
 import {PlayerModel} from "../../Data/Models/PlayerModel.js";
-import {IGameDrawer} from "../IGameDrawer";
-import {PlayDefaultScore,  PlaneSpeedByBlocks, BoatSpeedByBlocks, MapHeightByBlocks,
-    MapWidthByBlocks, WaterLevelByBlocks, BoatWidthByBlocks, BlockSize, PlayerCatchScore,
-    PlayerDefaultLives,ParachutistsSpeedByBlocks, GameTickIntervalByMilli, PlayTickIntervalByMilli
-} from "../../Configuration/GameConfigurator.js";
+import {IGameDrawer} from "../IGameDrawer.js";
+import {
+    BlockSize,
+    BoatSpeedByBlocks,
+    BoatWidthByBlocks,
+    GameTickIntervalByMilli,
+    MapHeightByBlocks,
+    MapWidthByBlocks,
+    ParachutistsSpeedByBlocks,
+    PlaneSpeedByBlocks,
+    PlayDefaultScore,
+    PlayerCatchScore,
+    PlayerDefaultLives,
+    PlayTickIntervalByMilli,
+    WaterLevelByBlocks
+} from "../../Configuration/GameConfigurations.js";
 import {GameDisplay} from "./GameDisplay.js";
 
 
-
 export class GameController {
-    private readonly waterLevelByYCoordinates: number; //this could be better represented by function
-    private readonly mapWidthByCoordinates: number; //this could be better represented by function
-
-    private gameDisplay:GameDisplay;
-
-
-    private player: PlayerModel;
+    private readonly waterLevelByYCoordinates: number; // this should be a function of the blocks
+    private readonly mapWidthByCoordinates: number; // this should be a function of the blocks
+    private readonly player: PlayerModel;
     private gameRunning: boolean;
+    private readonly airPlaneController: AirplaneController;
+    private readonly parachutistController: ParachutistController;
+    private readonly boatController: BoatController;
+    private readonly boatsChosenDirection: EDirection;
+    private readonly gameBlocksMap: GameMap;
 
-    private airPlaneController: AirplaneController;
-    private parachutistController: ParachutistController;
-    private boatController: BoatController;
-    private boatsChosenDirection: EDirection;
-
+    private gameDisplay: GameDisplay;
     private gameTickIntervalId: number | null = null;
     private parachutistCheckIntervalId: number | null = null;
-
-    private gameBlocksMap: GameMap;
-
-
 
     constructor() {
 
@@ -43,16 +46,11 @@ export class GameController {
             WaterLevelByBlocks
         );
 
-
         this.waterLevelByYCoordinates =
             (this.gameBlocksMap.height - this.gameBlocksMap.waterLevelBlockHeight) * this.gameBlocksMap.blockSize;
 
         this.mapWidthByCoordinates = MapWidthByBlocks * this.gameBlocksMap.blockSize;
-
-
-        this.gameRunning = false;
-
-
+        this.gameRunning = false
 
         this.airPlaneController = new AirplaneController();
         this.parachutistController = new ParachutistController();
@@ -78,12 +76,11 @@ export class GameController {
         // Note:
         // Didn't bother adding the other drawables such as players and background,
         // but if I would've then redrawScene would've been even simpler
-        const gameDrawers:IGameDrawer[] = [
+        const gameDrawers: IGameDrawer[] = [
             this.airPlaneController,
             this.boatController,
             this.parachutistController
         ]
-
 
         this.gameDisplay = new GameDisplay(gameDrawers);
     }
@@ -116,8 +113,8 @@ export class GameController {
                 xCoordinate: this.mapWidthByCoordinates,
                 yCoordinate: 0
             },
-            planeSpeed)
-
+            planeSpeed
+        )
 
         // Note:
         // Could've done a move-loop similar to what I've done in the drawing,
@@ -126,61 +123,55 @@ export class GameController {
         this.airPlaneController.move();
         this.parachutistController.move(this.waterLevelByYCoordinates);
         this.boatController.move(this.mapWidthByCoordinates, this.boatsChosenDirection);
-        this.gameDisplay.redrawScene(this.gameBlocksMap,this.player);
+        this.gameDisplay.redrawScene(this.gameBlocksMap, this.player);
     }
 
-
-
-    //this should be in the controller
-    private notifyCriticalParachutists(){
+    private notifyCriticalParachutists() {
         this.parachutistController.parachutists.forEach((parachutist, index) => {
-            const xParachutistCoordinates: number = parachutist.getPosition().xCoordinate;
-            const yParachutistCoordinates: number = parachutist.getPosition().yCoordinate;
-            const xBoatCoordinates: number = this.boatController.boat.getPosition().xCoordinate;
-            const yBoatCoordinates: number = this.boatController.boat.getPosition().yCoordinate;
-            const DesiredNewBoatXCoordinates =
-                (xBoatCoordinates + this.boatController.boat.getDimensions().xLength);
+                const xParachutistCoordinates: number = parachutist.getPosition().xCoordinate;
+                const yParachutistCoordinates: number = parachutist.getPosition().yCoordinate;
+                const xBoatCoordinates: number = this.boatController.boat.getPosition().xCoordinate;
+                const yBoatCoordinates: number = this.boatController.boat.getPosition().yCoordinate;
+                const DesiredNewBoatXCoordinates =
+                    (xBoatCoordinates + this.boatController.boat.getDimensions().xLength);
 
-            if (yParachutistCoordinates >= this.waterLevelByYCoordinates) {
-                const isParachutistCaught = yParachutistCoordinates === yBoatCoordinates &&
-                    xParachutistCoordinates >= xBoatCoordinates &&
-                    xParachutistCoordinates <= DesiredNewBoatXCoordinates
+                if (yParachutistCoordinates >= this.waterLevelByYCoordinates) {
+                    const isParachutistCaught = yParachutistCoordinates === yBoatCoordinates &&
+                        xParachutistCoordinates >= xBoatCoordinates &&
+                        xParachutistCoordinates <= DesiredNewBoatXCoordinates
 
-                isParachutistCaught ? this.eventBoatCaughtParachutist() : this.eventParachutistDrowned();
-                this.parachutistController.parachutists.splice(index, 1);
+                    isParachutistCaught ? this.eventBoatCaughtParachutist() : this.eventParachutistDrowned();
+                    this.parachutistController.parachutists.splice(index, 1);
+                }
             }
+        )
     }
-        )}
 
-
-    private eventBoatCaughtParachutist(){
+    private eventBoatCaughtParachutist() {
         this.player.score += PlayerCatchScore;
     }
 
-    private eventParachutistDrowned():void{
+    private eventParachutistDrowned(): void {
         this.player.lives--;
         if (this.player.lives <= 0) {
             this.checkIsGameOverAndActIfSo();
         }
     }
 
-    //this should listen to eventParachutistDrowned
-    private checkIsGameOverAndActIfSo():void{
+    private checkIsGameOverAndActIfSo(): void {
         this.logicGameOver();
         this.gameDisplay.displayGameOver(this.player);
     }
 
-    private logicGameOver(): void{
+    private logicGameOver(): void {
         this.stopAllIntervals();
         this.gameRunning = false;
     }
 
-    // maybe draw every keydown / keyup
+
     private initialization() {
         this.gameRunning = true;
-        this.airPlaneController.start();
         this.airPlaneController.addDispatchedParachutistListener(this.onParachutistDispatched.bind(this));
-        //can draw initial scene, didn't find it relevant
 
         setInterval(this.notifyCriticalParachutists.bind(this), PlayTickIntervalByMilli);
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -188,7 +179,7 @@ export class GameController {
     }
 
     private onParachutistDispatched(planeXCoordinate: number, planeYCoordinate: number) {
-        this.parachutistController.spawnParachutist(planeXCoordinate, planeYCoordinate,
+        this.parachutistController.spawnParachutist({xCoordinate: planeXCoordinate, yCoordinate: planeYCoordinate},
             ParachutistsSpeedByBlocks * this.gameBlocksMap.blockSize);
     }
 
@@ -206,6 +197,7 @@ export class GameController {
             }
         }
     }
+
     private handleKeyUp(event: KeyboardEvent): void {
         if (this.gameRunning) {
             switch (event.key) {

@@ -1,4 +1,4 @@
-export interface Dimensions{
-     xLength: number;
-     yLength: number;
+export interface Dimensions {
+    xLength: number;
+    yLength: number;
 }

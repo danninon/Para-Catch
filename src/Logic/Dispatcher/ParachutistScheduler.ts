@@ -7,13 +7,16 @@ export class ParachutistScheduler {
     constructor(fixedInterval: number, randomIntervalRange: number, dispatchFunction: () => void) {
         this.fixedInterval = fixedInterval;
         this.randomIntervalRange = randomIntervalRange;
-        this.lastDispatchTime = new Date(); // Initialize last dispatch time
+        this.lastDispatchTime = new Date();
         this.dispatchFunction = dispatchFunction;
-
     }
 
-    public start(){
+    public start() {
         this.scheduleNextDispatch();
+    }
+
+    public stop() {
+
     }
 
     private scheduleNextDispatch(): void {
@@ -22,18 +25,16 @@ export class ParachutistScheduler {
         const minimumInterval = this.fixedInterval + Math.random() * this.randomIntervalRange;
 
         if (timeSinceLastDispatch < minimumInterval) {
-            console.log("Not enough time has passed since the last dispatch. Waiting more...");
             setTimeout(() => {
-                this.scheduleNextDispatch(); // Try scheduling again after a short delay
-            }, 100); // Check again after 500 milliseconds
+                this.scheduleNextDispatch();
+            }, 100);
             return;
         }
 
-        console.log("Scheduling next dispatch:", minimumInterval);
         setTimeout(() => {
-            this.dispatchFunction();  // Execute the dispatch function
-            this.lastDispatchTime = new Date();  // Update the last dispatched time
-            this.scheduleNextDispatch();  // Recursively schedule the next dispatch
-        }, minimumInterval - timeSinceLastDispatch); // Adjust for already elapsed time
+            this.dispatchFunction();
+            this.lastDispatchTime = new Date();
+            this.scheduleNextDispatch();  // recursively schedule the next dispatch
+        }, minimumInterval - timeSinceLastDispatch);
     }
 }

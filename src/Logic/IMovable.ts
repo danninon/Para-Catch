@@ -1,10 +1,13 @@
-import {Position} from "../Data/Models/Utils/Position";
-import {Dimensions} from "../Data/Models/Utils/Dimentions";
+import {Position} from "../Data/Models/Utils/Position.js";
+import {Dimensions} from "../Data/Models/Utils/Dimentions.js";
 
 export interface Movable {
-  updatePosition( position: Position ): void;
-  getPosition(): Position;
-  getSpeed(): number;
-  getDimensions(): Dimensions;
+    updatePosition(position: Position): void;
+
+    getPosition(): Position;
+
+    getSpeed(): number;
+
+    getDimensions(): Dimensions;
 }
 

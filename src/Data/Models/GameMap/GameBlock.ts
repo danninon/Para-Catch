@@ -1,5 +1,5 @@
 export class GameBlock {
-    private type: string;  // For example, 'air', 'sea', or 'ground'
+    private type: string;  // for example, 'air', 'sea'
 
     constructor(type: string) {
         this.type = type;
