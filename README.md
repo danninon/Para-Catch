@@ -25,7 +25,9 @@ npm run build     # Build the project
 
 ## **Running the Game**
 To play the game, you'll need to serve the files on a local server. If you have Python installed, you can easily start a server with the following command:
+```bash
 python -m http.server <port>
+```
 Replace <port> with your preferred port number.
 
 Then, open your favorite web browser and navigate to:
