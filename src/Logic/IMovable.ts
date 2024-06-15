@@ -8,6 +8,3 @@ export interface Movable {
   getDimensions(): Dimensions;
 }
 
-export interface MovementStrategy {
-  move(movable: Movable): void;
-}
