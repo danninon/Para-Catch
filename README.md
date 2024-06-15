@@ -36,7 +36,6 @@ http://localhost:<port>
 ## **Game Controls** 🕹️
 
 - **Arrow Left/Right**: Move the boat left or right to catch parachuters.
-- **Spacebar**: (Optional) Additional game-specific action.
 
 ## **Features**
 
