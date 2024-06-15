@@ -24,7 +24,10 @@ export class GameController {
     private gameRunning: boolean;
     private airPlaneController: AirplaneController;
     private parachutistController: ParachutistController;
-    private gameTickInterval: number = 500; // 1 second per game tick
+
+    private gameTickIntervalByMilli: number = 1000; // 1 second per game tick
+    private playTickIntervalByMilli: number = 100;
+
     private gameBlocksMap: GameMap;
     private ctx: CanvasRenderingContext2D;
     private boatController: BoatController;
@@ -53,7 +56,7 @@ export class GameController {
         this.airPlaneController = new AirplaneController();
         this.parachutistController = new ParachutistController();
 
-        //Todo: extract to function (currently doesn't work) because long and complicated?
+
         const xCoordinateMiddleMap = (this.mapWidthByBlocks / 2) * this.gameBlocksMap.blockSize;
 
         this.boatController = new BoatController(
@@ -73,15 +76,11 @@ export class GameController {
     public run(): void {
         this.initialization()
         if (this.gameRunning) {
-            setInterval(() => this.gameTick(), this.gameTickInterval);
+            setInterval(() => this.gameTick(), this.gameTickIntervalByMilli);
         }
     }
 
     private gameTick(): void {
-
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height); // Clear the canvas for the new frame
-        this.gameBlocksMap.draw(this.ctx);
-
         if (!this.airPlaneController.airPlaneExists) {
             const planeSpeed: number = this.planeSpeedByBlocks * this.gameBlocksMap.blockSize;
             this.airPlaneController.createAndLaunchAirPlane(
@@ -92,34 +91,33 @@ export class GameController {
                 planeSpeed);
         }
 
+        //move loop
         this.airPlaneController.move();
         this.parachutistController.move(this.waterLevelByYCoordinates);
         this.boatController.move(this.mapWidthByCoordinates, this.boatsChosenDirection);
-        //move airplane
-        //move parachutists
-        //move ship
 
-        this.airPlaneController.draw(this.ctx);
-        this.parachutistController.draw(this.ctx);
-        this.boatController.draw(this.ctx);
+        //drawable loop
+        this.redrawScene();
         // check all parachutists if they are in boat level or in water level
 
 
     }
 
 
-    private catchChecker() {
+    private checkIfActionNeededByParachutistsYLength() {
         // Check all parachutists if they are in boat level or in water level
         this.parachutistController.parachutists.forEach((parachutist, index) => {
             const xParachutistCoordinates: number = parachutist.getPosition().xCoordinate;
             const yParachutistCoordinates: number = parachutist.getPosition().yCoordinate;
             const xBoatCoordinates: number = this.boatController.boat.getPosition().xCoordinate;
             const yBoatCoordinates: number = this.boatController.boat.getPosition().yCoordinate
+            const DesiredNewBoatXCoordinates =
+                (xBoatCoordinates + this.boatController.boat.getDimensions().xLength);
 
             if (yParachutistCoordinates >= this.waterLevelByYCoordinates) {
                 if (yParachutistCoordinates === yBoatCoordinates &&
                     xParachutistCoordinates >= xBoatCoordinates &&
-                    xParachutistCoordinates <= (xBoatCoordinates + this.boatController.boat.getDimensions().xLength)) {
+                    xParachutistCoordinates <= DesiredNewBoatXCoordinates) {
                     // Catch
                     this.player.score += this.playerCatchScore;
                     console.log(`Parachutist caught! Score is now: ${this.player.score}`);
@@ -133,7 +131,6 @@ export class GameController {
                 // Remove parachutist from the array as it's either caught or missed
                 this.parachutistController.parachutists.splice(index, 1);
             }
-            this.player.draw(this.ctx);
         })
     }
 
@@ -141,14 +138,12 @@ export class GameController {
         this.gameRunning = true;
         this.airPlaneController.start();
         this.airPlaneController.addDispatchedParachutistListener(this.onParachutistDispatched.bind(this));
-        this.player.draw(this.ctx);
+        //can draw initial scene, didn't find it relevant
 
-        setInterval(this.catchChecker.bind(this), 100);
+        setInterval(this.checkIfActionNeededByParachutistsYLength.bind(this), this.playTickIntervalByMilli);
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
         document.addEventListener('keyup', this.handleKeyUp.bind(this));
 
-        //boat.start
-        //player.start
     }
 
     private onParachutistDispatched(planeXCoordinate: number, planeYCoordinate: number) {
@@ -162,13 +157,11 @@ export class GameController {
         switch (event.key) {
             case "ArrowLeft":
                 this.boatController.move(this.mapWidthByCoordinates, EDirection.LEFT)
-
-                // this.boatsChosenDirection = EDirection.LEFT;
+                this.redrawScene();
                 break;
             case "ArrowRight":
                 this.boatController.move(this.mapWidthByCoordinates, EDirection.RIGHT)
-
-                // this.boatsChosenDirection = EDirection.RIGHT;
+                this.redrawScene();
                 break;
         }
     }
@@ -178,10 +171,21 @@ export class GameController {
             case "ArrowLeft":
             case "ArrowRight":
                 this.boatController.move(this.mapWidthByCoordinates, EDirection.STAY)
-
+                this.redrawScene();
                 // this.boatsChosenDirection = EDirection.STAY;  // Stop moving when the keys are released
                 break;
         }
     }
 
+    private redrawScene() {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height); // Clear the canvas for the new frame
+
+        //todo: make a loop of drawables?
+        this.gameBlocksMap.draw(this.ctx);
+        this.player.draw(this.ctx);
+
+        this.parachutistController.draw(this.ctx);
+        this.boatController.draw(this.ctx);
+        this.airPlaneController.draw(this.ctx);
+    }
 }
