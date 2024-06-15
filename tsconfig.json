@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    // or higher, like es2020
+    "module": "es6",
+    "outDir": "./dist",
+    // Output directory for compiled files
+    "rootDir": "./",
+    // Root directory of source files
+    "moduleResolution": "node",
+    "strict": true,
+    // Enable all strict type-checking options
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/**/*"
+    // or "*.ts" to include all TypeScript files
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
