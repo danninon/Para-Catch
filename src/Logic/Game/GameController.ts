@@ -33,8 +33,16 @@ export class GameController {
     private boatController: BoatController;
     private boatsChosenDirection: EDirection;
 
-    constructor(canvasId: string) {
-        const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    constructor() {
+        const canvas = document.querySelector('canvas'); // Selects the first canvas element
+        if (!canvas) {
+            throw new Error('No canvas element found');
+        }
+
+        this.ctx = canvas.getContext('2d')!;
+        if (!this.ctx) {
+            throw new Error('Unable to get 2D context');
+        }
 
         this.ctx = canvas.getContext('2d')!;
         this.gameBlocksMap = new GameMap(
