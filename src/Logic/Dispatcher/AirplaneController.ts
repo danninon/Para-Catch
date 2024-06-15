@@ -61,7 +61,7 @@ export class AirplaneController {
 
     public start(): void {
         console.log('at start of airplanecontroller');
-        setInterval(this.regularUpdate.bind(this), 1000); //dropping parachutists
+        setInterval(this.parachutistSpawnTimer.bind(this), 1000); //dropping parachutists
 
         //flying new planes
         //moving
@@ -73,7 +73,7 @@ export class AirplaneController {
 
     }
 
-    private regularUpdate(): void {
+    private parachutistSpawnTimer(): void {
         // can dispatch plane
         const now = new Date();
         //if more than one second passed from the last parachutist, call DispatchParachutist()
@@ -83,18 +83,14 @@ export class AirplaneController {
                 this.lastDispatchedParachutist = now; // Update the last dispatched time
                 this.dispatchParachutist(
                     this._airplane.getPosition().xCoordinate,
-                    this._airplane.getPosition().yCoordinate);
+                    this._airplane.getPosition().yCoordinate
+                );
 
             }
         }
     }
 
-
-
-    // Todo: after parachutist was written
-    // create parachutist
-    // add to array
-    // send to display?
+    //todo: make this get a position, send a position
     private dispatchParachutist(xCoordinate: number, yCoordinate: number): void {
         console.log("at dispatchParachutist");
         this.eventDispatchedListeners.forEach(listener => listener(xCoordinate, yCoordinate));
@@ -114,8 +110,8 @@ export class AirplaneController {
         }
     }
 
-    public createAndLaunchAirPlane(position: Position, speed: number){
-        this._airplane = new AirPlaneModel(position,speed);
+    public createAndLaunchAirPlane(positionByCoordinates: Position, speedByCoordinates: number){
+        this._airplane = new AirPlaneModel(positionByCoordinates,speedByCoordinates);
         this._airPlaneExists = true;
         this.start();
     }

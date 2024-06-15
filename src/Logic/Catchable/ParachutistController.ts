@@ -16,17 +16,18 @@ export class ParachutistController  {
         this.display = new ParachutistDisplay();
     }
 
-    spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeed: number) {
+    //todo: make this get position instead of making it inside
+    spawnParachutist(planeXCoordinate: number, planeYCoordinate: number, parachutistsSpeedByCoordinates: number) {
         const newParachutist = new ParachutistModel(
             {
                 xCoordinate: planeXCoordinate,
                 yCoordinate: planeYCoordinate
-            }, parachutistsSpeed);
+            }, parachutistsSpeedByCoordinates);
         console.log("spawnParachutist", newParachutist)
         this._parachutists.push(newParachutist);
     }
 
-    public move(waterLevelPixels: number): void {
+    public move(waterLevelByYCoordinates: number): void {
         console.log("move: parachutists", this._parachutists);
 
         this._parachutists.forEach(parachutist => {
@@ -34,9 +35,9 @@ export class ParachutistController  {
         })
 
         this._parachutists = this._parachutists.filter(parachutist => {
-            console.log('waterLevelPixels', waterLevelPixels)
+            console.log('waterLevelPixels', waterLevelByYCoordinates)
         //    console.log('parachutist.yCoordinate', parachutist.yCoordinate);
-            return parachutist.getPosition().yCoordinate <= waterLevelPixels;
+            return parachutist.getPosition().yCoordinate <= waterLevelByYCoordinates;
         });
     }
 
