@@ -9,7 +9,7 @@ import {PlayDefaultScore,  PlaneSpeedByBlocks, BoatSpeedByBlocks, MapHeightByBlo
     PlayerDefaultLives,ParachutistsSpeedByBlocks, GameTickIntervalByMilli, PlayTickIntervalByMilli
 } from "../../Configuration/GameConfigurator.js";
 import {GameDisplay} from "./GameDisplay.js";
-import {GameLogic} from "./GameLogic.js";
+
 
 
 export class GameController {
@@ -17,7 +17,7 @@ export class GameController {
     private readonly mapWidthByCoordinates: number; //this could be better represented by function
 
     private gameDisplay:GameDisplay;
-    private gameLogic:GameLogic;
+
 
     private player: PlayerModel;
     private gameRunning: boolean;
@@ -31,25 +31,11 @@ export class GameController {
     private parachutistCheckIntervalId: number | null = null;
 
     private gameBlocksMap: GameMap;
-    private ctx: CanvasRenderingContext2D;
 
 
-    private gameDrawers: IGameDrawer[]
 
     constructor() {
-        this.gameDrawers = [];
 
-        const canvas = document.querySelector('canvas'); // Selects the first canvas element
-        if (!canvas) {
-            throw new Error('No canvas element found');
-        }
-
-        this.ctx = canvas.getContext('2d')!;
-        if (!this.ctx) {
-            throw new Error('Unable to get 2D context');
-        }
-
-        this.ctx = canvas.getContext('2d')!;
         this.gameBlocksMap = new GameMap(
             MapWidthByBlocks,
             MapHeightByBlocks,
@@ -66,8 +52,7 @@ export class GameController {
 
         this.gameRunning = false;
 
-        this.gameLogic = new GameLogic();
-        this.gameDisplay = new GameDisplay();
+
 
         this.airPlaneController = new AirplaneController();
         this.parachutistController = new ParachutistController();
@@ -93,9 +78,14 @@ export class GameController {
         // Note:
         // Didn't bother adding the other drawables such as players and background,
         // but if I would've then redrawScene would've been even simpler
-        this.gameDrawers.push(this.airPlaneController);
-        this.gameDrawers.push(this.boatController);
-        this.gameDrawers.push(this.parachutistController);
+        const gameDrawers:IGameDrawer[] = [
+            this.airPlaneController,
+            this.boatController,
+            this.parachutistController
+        ]
+
+
+        this.gameDisplay = new GameDisplay(gameDrawers);
     }
 
     public run(): void {
@@ -136,13 +126,10 @@ export class GameController {
         this.airPlaneController.move();
         this.parachutistController.move(this.waterLevelByYCoordinates);
         this.boatController.move(this.mapWidthByCoordinates, this.boatsChosenDirection);
-        this.redrawScene();
+        this.gameDisplay.redrawScene(this.gameBlocksMap,this.player);
     }
 
-    // this code does 3 things:
-    // 1. listens to parachutist's status this should call 2
-    // 2. acts if something did happen this should call 3
-    // 3. displays
+
 
     //this should be in the controller
     private notifyCriticalParachutists(){
@@ -155,13 +142,11 @@ export class GameController {
                 (xBoatCoordinates + this.boatController.boat.getDimensions().xLength);
 
             if (yParachutistCoordinates >= this.waterLevelByYCoordinates) {
-                if (yParachutistCoordinates === yBoatCoordinates &&
+                const isParachutistCaught = yParachutistCoordinates === yBoatCoordinates &&
                     xParachutistCoordinates >= xBoatCoordinates &&
-                    xParachutistCoordinates <= DesiredNewBoatXCoordinates) {
-                        this.eventBoatCaughtParachutist();
-                }else{
-                    this.eventParachutistDrowned();
-                }
+                    xParachutistCoordinates <= DesiredNewBoatXCoordinates
+
+                isParachutistCaught ? this.eventBoatCaughtParachutist() : this.eventParachutistDrowned();
                 this.parachutistController.parachutists.splice(index, 1);
             }
     }
@@ -171,6 +156,7 @@ export class GameController {
     private eventBoatCaughtParachutist(){
         this.player.score += PlayerCatchScore;
     }
+
     private eventParachutistDrowned():void{
         this.player.lives--;
         if (this.player.lives <= 0) {
@@ -181,30 +167,12 @@ export class GameController {
     //this should listen to eventParachutistDrowned
     private checkIsGameOverAndActIfSo():void{
         this.logicGameOver();
-        this.displayGameOver();
+        this.gameDisplay.displayGameOver(this.player);
     }
 
     private logicGameOver(): void{
         this.stopAllIntervals();
-    }
-
-    private displayGameOver(): void {
-        // Clear the entire canvas
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        // Set styles for the game over screen
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.75)'; // Semi-transparent black background
-        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
-        // Text settings
-        this.ctx.fillStyle = '#FFFFFF'; // White text color
-        this.ctx.font = '36px Arial';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-
-        // Draw the text in the center of the canvas
-        this.ctx.fillText('Game Over', this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
-        this.ctx.font = '24px Arial';
-        this.ctx.fillText(`Final Score: ${this.player.score}`, this.ctx.canvas.width / 2, this.ctx.canvas.height / 2 + 40);
+        this.gameRunning = false;
     }
 
     // maybe draw every keydown / keyup
@@ -225,38 +193,29 @@ export class GameController {
     }
 
     private handleKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case "ArrowLeft":
-                this.boatController.move(this.mapWidthByCoordinates, EDirection.LEFT)
-                this.redrawScene();
-                break;
-            case "ArrowRight":
-                this.boatController.move(this.mapWidthByCoordinates, EDirection.RIGHT)
-                this.redrawScene();
-                break;
+        if (this.gameRunning) {
+            switch (event.key) {
+                case "ArrowLeft":
+                    this.boatController.move(this.mapWidthByCoordinates, EDirection.LEFT)
+                    this.gameDisplay.redrawScene(this.gameBlocksMap, this.player);
+                    break;
+                case "ArrowRight":
+                    this.boatController.move(this.mapWidthByCoordinates, EDirection.RIGHT)
+                    this.gameDisplay.redrawScene(this.gameBlocksMap, this.player);
+                    break;
+            }
         }
     }
-
     private handleKeyUp(event: KeyboardEvent): void {
-        switch (event.key) {
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.boatController.move(this.mapWidthByCoordinates, EDirection.STAY)
-                this.redrawScene();
-                // this.boatsChosenDirection = EDirection.STAY;  // Stop moving when the keys are released
-                break;
+        if (this.gameRunning) {
+            switch (event.key) {
+                case "ArrowLeft":
+                case "ArrowRight":
+                    this.boatController.move(this.mapWidthByCoordinates, EDirection.STAY)
+                    this.gameDisplay.redrawScene(this.gameBlocksMap, this.player);
+                    break;
+            }
         }
     }
 
-    private redrawScene() {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height); // Clear the canvas for the new frame
-
-
-        this.gameBlocksMap.draw(this.ctx);
-        this.player.draw(this.ctx);
-
-        //Note: So cool
-        this.gameDrawers.forEach((gameDrawer)=> gameDrawer.draw(this.ctx))
-
-    }
 }
